@@ -1,0 +1,9 @@
+/.idea/
+/src/vendor/
+/src/application/config/database_config.php
+/src/public/images/
+<<<<<<< HEAD
+=======
+!/src/public/images/default.jpg
+/src/node_modules/
+>>>>>>> mask

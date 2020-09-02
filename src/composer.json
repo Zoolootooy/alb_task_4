@@ -1,0 +1,17 @@
+{
+  "name": "developer/src",
+  "authors": [
+    {
+      "name": "Your Name",
+      "email": "maxradjia.zp@gmail.com"
+    }
+  ],
+  "require": {
+    "ext-json": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "application\\": "application/"
+    }
+  }
+}

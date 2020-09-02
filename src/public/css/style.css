@@ -1,0 +1,67 @@
+#map {
+    height: 450px;
+}
+
+
+/* Optional: Makes the sample page fill the window. */
+html,
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+
+.fa {
+    padding: 20px;
+    font-size: 60px;
+    width: 100px;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 50%;
+}
+
+.fa:hover {
+    opacity: 0.7;
+    text-decoration: none;
+    color: white;
+}
+
+/* Set a specific color for each brand *//* Facebook */
+.fa-facebook {
+    background: #3B5998;
+    color: white;
+}
+
+/* Twitter */
+.fa-twitter {
+    background: #55ACEE;
+    color: white;
+}
+
+.box {
+    position: relative;
+    width:100px;
+    height:100px;
+    /*transform: translate(0%, 0%);*/
+}
+
+.box img {
+    width:100px;
+    height:100px;
+    object-fit:cover;
+}
+
+.td-photo{
+    width: 125px;
+}
+
+.td-rep_subj {
+    max-width: 30%;
+}
+
+.iti__flag {background-image: url("path/to/flags.png");}
+
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .iti__flag {background-image: url("path/to/flags@2x.png");}
+}

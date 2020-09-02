@@ -1,0 +1,5 @@
+<?php
+return [
+    'link' => 'your_link',
+    'text' => 'your_text'
+];
