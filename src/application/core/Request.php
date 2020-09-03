@@ -32,7 +32,7 @@ class Request
         if(!empty($name) && isset($_POST[$name])) {
             $val = $_POST[$name];
         } elseif(empty($name)) {
-            $val = file_get_contents('php://input');
+            $val = $_POST;
         }
 
         if($type == 'string') {

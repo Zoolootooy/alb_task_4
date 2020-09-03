@@ -1,7 +1,6 @@
 <?php
 
 $router->get('', 'ControllerMain@index');
-$router->get('abba', 'ControllerMain@abba');
 $router->get('getCountries', 'ControllerMain@getCountries');
 $router->get('members_list', 'ControllerList@index');
 $router->get('newForm', 'ControllerMain@newForm');

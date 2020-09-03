@@ -86,6 +86,7 @@ class ControllerMain extends Controller
     }
 
 
+
     public function updateData()
     {
         $model = new ModelMain();
@@ -114,7 +115,6 @@ class ControllerMain extends Controller
     {
         setcookie("email", "", time() - 3600);
         setcookie("idUser", "", time() - 3600);
-        header("Location: /");
     }
 
 }

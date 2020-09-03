@@ -23,8 +23,8 @@ Vue.component('phoneMask', {
                 showMaskOnHover: false,
 
                 //autoUnmask
-                //true: value will be without mask;
-                //false: value will be with mask;
+                //true: value will be without mask
+                //false: value will be with mask
                 autoUnmask: false,
                 clearMaskOnLostFocus: false
             },
@@ -79,7 +79,7 @@ var app = new Vue({
 
         firstName: '',
         lastName: '',
-        date: '',
+        date: null,
         birthdate: '',
         repSubj: '',
         country: 0,
@@ -114,7 +114,6 @@ var app = new Vue({
         errorPhotoText: '',
         errorPhoto: false,
 
-        date: '',
         countriesList: [],
         state: {
             disabledDates: {
@@ -186,6 +185,7 @@ var app = new Vue({
         this.getMembersNumber()
         this.getConfig()
         this.getCookies()
+
     },
 
     methods: {
@@ -225,13 +225,15 @@ var app = new Vue({
                     }
                 }
             ).then((response) => {
-                this.firstName = response.data[0].firstname
-                this.lastName = response.data[0].lastname
-                this.birthdate = response.data[0].birthdate
-                this.repSubj = response.data[0].rep_subject
-                this.country = response.data[0].country_id
-                this.phoneNumber = response.data[0].phone
-                this.email = response.data[0].email
+                if (response.data[0].company != null) {
+                    this.company = response.data[0].company
+                }
+                if (response.data[0].position != null) {
+                    this.position = response.data[0].position
+                }
+                if (response.data[0].about != null) {
+                    this.about = response.data[0].about
+                }
             })
         },
 
@@ -259,6 +261,7 @@ var app = new Vue({
             if ((this.getCookie('email') !== undefined) &&
                 (this.getCookie('idUser') !== undefined)) {
                 this.toForm2()
+                this.getMember()
             }
             else {
                this.toForm1()
@@ -270,8 +273,8 @@ var app = new Vue({
         },
 
         formFirstSubmit() {
-            this.checkFirstName(1, 100)
-            this.checkLastName(1, 255)
+            this.checkFirstName(2, 100)
+            this.checkLastName(2, 255)
             this.checkBirthdate()
             this.checkRepSubj(3, 20)
             this.checkCountry()
@@ -279,14 +282,13 @@ var app = new Vue({
             this.checkEmail(1, 70)
             if (!this.checkErrors1()) {
                 let formData = new FormData()
-                formData.append('firstname', String(this.firstName))
-                formData.append('lastname', this.lastName)
-                formData.append('birthdate', this.birthdate)
-                formData.append('rep_subject', this.repSubj)
+                formData.append('firstname', this.firstName.trim())
+                formData.append('lastname', this.lastName.trim())
+                formData.append('birthdate', this.birthdate.trim())
+                formData.append('rep_subject', this.repSubj.trim())
                 formData.append('country_id', this.country)
-                formData.append('phone', this.phoneNumber)
-                formData.append('email', this.email)
-                console.log(formData)
+                formData.append('phone', this.phoneNumber.trim())
+                formData.append('email', this.email.trim())
                 axios.post('saveData',
                     formData,
                     {
@@ -294,11 +296,7 @@ var app = new Vue({
                             'Content-Type': 'multipart/form-data'
                         }
                     }
-                ).then(function () {
-                    console.log('SUCCESS!!')
-                }).catch(function () {
-                    console.log('FAILURE!!')
-                })
+                )
                 this.toForm2()
             }
         },
@@ -309,10 +307,10 @@ var app = new Vue({
             this.checkAbout(21844)
             this.checkPhoto()
             if (!this.checkErrors2()) {
-                let formData = new FormData();
-                formData.append('company', this.company)
-                formData.append('position', this.position)
-                formData.append('about', this.about)
+                let formData = new FormData()
+                formData.append('company', this.company.trim())
+                formData.append('position', this.position.trim())
+                formData.append('about', this.about.trim())
                 formData.append('photo', this.photo)
 
 
@@ -323,18 +321,31 @@ var app = new Vue({
                               'Content-Type': 'multipart/form-data'
                           }
                       }
-                ).then(function () {
-                    console.log('SUCCESS!!')
-                }).catch(function () {
-                    console.log('FAILURE!!')
-                })
+                )
                 this.toForm3()
             }
         },
 
+        newForm() {
+            axios.get('newForm').then((response) => {
+            })
+            this.firstName = ''
+            this.lastName = ''
+            this.birthdate = ''
+            this.repSubj = ''
+            this.country = 0
+            this.phoneNumber = ''
+            this.email = ''
+            this.company = ''
+            this.position = ''
+            this.about = ''
+            this.photo = ''
+
+            this.toForm1()
+        },
 
         getDate() {
-            let month, year, day;
+            let month, year, day
             if (this.date !== '') {
                 let str = String(this.date)
                 let result = str.match(/([a-zA-Z]){3}\s(\d){2}\s(\d){4}/)[0]
@@ -405,15 +416,7 @@ var app = new Vue({
             }
         },
 
-        checkBirthdate() {
-            if (this.date === "") {
-                this.errorBirthdate = true
-                this.errorBirthdateText = 'The "Birthdate" field is required'
-            } else {
-                this.errorBirthdate = false
-                this.errorBirthdateText = ''
-            }
-        },
+
 
         checkErrors1() {
             if (this.errorFirstName === true) {
@@ -456,9 +459,14 @@ var app = new Vue({
             return false
         },
 
+        checkForSpaces(str){
+            var re = /^\S{1,}.{0,}\S{1,}$/
+            return re.test(str)
+        },
+
         checkFirstName(min, max) {
-            if (this.firstName.length < min) {
-                if (this.firstName.length === 0) {
+            if (this.firstName.trim().length < min) {
+                if (this.firstName.trim().length === 0) {
                     this.errorFirstName = true
                     this.errorFirstNameText = 'The "Firstname" field is required'
                 } else {
@@ -466,18 +474,19 @@ var app = new Vue({
                     this.errorFirstNameText = 'The "Firstname" field must be at least ' + min + ' characters'
                 }
             }
-            if (this.firstName.length >= min && this.firstName.length <= max) {
+            if (this.firstName.trim().length >= min && this.firstName.trim().length <= max) {
                 this.errorFirstName = false
+                this.errorFirstNameText = ''
             }
-            if (this.firstName.length > max) {
+            if (this.firstName.trim().length > max) {
                 this.errorFirstName = true
                 this.errorFirstNameText = 'Please enter no more than ' + max + ' characters.'
             }
         },
 
         checkLastName(min, max) {
-            if (this.lastName.length < min) {
-                if (this.lastName.length === 0) {
+            if (this.lastName.trim().length < min) {
+                if (this.lastName.trim().length === 0) {
                     this.errorLastName = true
                     this.errorLastNameText = 'The "Lastname" field is required'
                 } else {
@@ -485,20 +494,34 @@ var app = new Vue({
                     this.errorLastNameText = 'The "Lastname" field must be at least ' + min + ' characters'
                 }
             }
-            if (this.lastName.length >= min && this.lastName.length <= max) {
-                this.errorLastName = false
-                this.errorLastNameText = ''
+            if (this.lastName.trim().length >= min && this.lastName.trim().length <= max) {
+                if (!this.checkForSpaces(this.lastName)){
+                    this.errorLastName = true
+                    this.errorLastNameText = 'Don\'t start or end "Lastname" field with space'
+                } else {
+                    this.errorLastName = false
+                    this.errorLastNameText = ''
+                }
             }
-            if (this.lastName.length > max) {
+            if (this.lastName.trim().length > max) {
                 this.errorLastName = true
                 this.errorLastNameText = 'Please enter no more than ' + max + ' characters.'
             }
+        },
 
+        checkBirthdate() {
+            if (this.date === null) {
+                this.errorBirthdate = true
+                this.errorBirthdateText = 'The "Birthdate" field is required'
+            } else {
+                this.errorBirthdate = false
+                this.errorBirthdateText = ''
+            }
         },
 
         checkRepSubj(min, max) {
-            if (this.repSubj.length < min) {
-                if (this.repSubj.length === 0) {
+            if (this.repSubj.trim().length < min) {
+                if (this.repSubj.trim().length === 0) {
                     this.errorRepSubj = true
                     this.errorRepSubjText = 'The "Report subject" field is required'
                 } else {
@@ -506,11 +529,16 @@ var app = new Vue({
                     this.errorRepSubjText = 'The "Report subject" field must be at least ' + min + ' characters'
                 }
             }
-            if (this.repSubj.length >= min && this.repSubj.length <= max) {
-                this.errorRepSubj = false
-                this.errorRepSubjText = ''
+            if (this.repSubj.trim().length >= min && this.repSubj.trim().length <= max) {
+                if (!this.checkForSpaces(this.repSubj)){
+                    this.errorRepSubj = true
+                    this.errorRepSubjText = 'Don\'t start or end "Report subject" field with space'
+                } else {
+                    this.errorRepSubj = false
+                    this.errorRepSubjText = ''
+                }
             }
-            if (this.repSubj.length > max) {
+            if (this.repSubj.trim().length > max) {
                 this.errorRepSubj = true
                 this.errorRepSubjText = 'Please enter no more than ' + max + ' characters.'
             }
@@ -543,8 +571,8 @@ var app = new Vue({
         },
 
         validPhone: function (phone) {
-            var re = /\+[0-9,\-, ,(,)]+$/;
-            return re.test(phone);
+            var re = /\+[0-9,\-, ,(,)]+$/
+            return re.test(phone)
         },
 
         checkEmail(min, max) {
@@ -598,12 +626,12 @@ var app = new Vue({
 
         validEmail: function (email) {
             var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-            return re.test(email);
+            return re.test(email)
         },
 
 
         handleFileUpload() {
-            this.photo = this.$refs.file.files[0];
+            this.photo = this.$refs.file.files[0]
         },
 
         checkCompany(max) {
@@ -613,7 +641,7 @@ var app = new Vue({
             }
             if (this.company.length > max) {
                 this.errorCompany = true
-                this.errorCompanyText = 'Please enter no more than ' + max + ' characters.'
+                this.errorCompanyText = 'Please enter no more than ' + max + ' characters'
             }
         },
 
@@ -624,7 +652,7 @@ var app = new Vue({
             }
             if (this.position.length > max) {
                 this.errorPosition = true
-                this.errorPositionText = 'Please enter no more than ' + max + ' characters.'
+                this.errorPositionText = 'Please enter no more than ' + max + ' characters'
             }
         },
 
@@ -635,24 +663,27 @@ var app = new Vue({
             }
             if (this.about.length > max) {
                 this.errorAbout = true
-                this.errorAboutText = 'Please enter no more than ' + max + ' characters.'
+                this.errorAboutText = 'Please enter no more than ' + max + ' characters'
             }
         },
 
         checkPhoto() {
             if (this.photo !== '') {
                 let photoType = String(this.$refs.file.files[0].type)
+                let photoSize = String(this.$refs.file.files[0].size)
                 if ((photoType === 'image/jpeg') || (photoType === 'image/jpg') || (photoType === 'image/png') || (photoType === 'image/gif')) {
-                    this.errorPhoto = false
-                    this.errorPhotoText = ''
+                    if (photoSize > 5 * 1024 * 1024) {
+                        this.errorPhoto = true
+                        this.errorPhotoText = 'File must be less then 5 Mb'
+                    } else {
+                        this.errorPhoto = false
+                        this.errorPhotoText = ''
+                    }
                 } else {
                     this.errorPhoto = true
                     this.errorPhotoText = 'Only .png, .jpg, .jpeg, .gif files allowed'
                 }
             }
-
         },
     }
 })
-
-

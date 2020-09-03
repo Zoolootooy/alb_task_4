@@ -1,8 +1,14 @@
 Projects needs:
 ```composer install```
 
-New DB dump ("about" field changed its type varchar->Text)
-1. Date field change "invalid" class to "valid" after first date selecting.
-2. Phone mask changed to "Inputmask Multi". Now it selects the mask  and change it, considering inputting nums.
-3. All fields got maxLength.
-4. A new button has appeared under the "SocNet links" which helps to go to the first form in order to fill out
+PHP version >=7.2.0
+
+Create DB from dump ('sql/Dump.sql')
+
+DB must be with CHARSET=utf8mb4, COLLATE=utf8mb4_unicode_ci
+
+Config files are located in sqc/application/config/
+Create database_config.php (example also is located there). 
+
+I connected vue.js dev version. For prod version please comment second line in 'src/application/views/partials/footer.php'
+and uncomment third line.

@@ -10,8 +10,13 @@ class ControllerList extends Controller
 {
     public function index()
     {
+        $this->view->generate('list.php');
+    }
+
+
+    public function getMembersList()
+    {
         $this->model = new ModelMain();
-        $members = $this->model->getAllMembers();
-        $this->view->generate('list.php', ['members' => $members]);
+        echo json_encode($members = $this->model->getAllMembers());
     }
 }
