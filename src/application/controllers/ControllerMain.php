@@ -10,18 +10,6 @@ use application\models\ModelMain;
 
 class ControllerMain extends Controller
 {
-
-    public function abba()
-    {
-        $map_config = Config::get('map_config');
-        $share_config = Config::get('share_config');
-        $modelCountry = new ModelCountry();
-        $countries = $modelCountry->getCountries();
-        $this->view->generate('abba.php', [
-            'map_config' => $map_config,
-        ]);
-    }
-
     public function index()
     {
         $map_config = Config::get('map_config');
