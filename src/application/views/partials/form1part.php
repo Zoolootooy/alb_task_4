@@ -17,7 +17,7 @@
 			       type="text"
 			       name="firstname"
 			       placeholder="First name"
-			       value="" v-model="firstName">
+			       v-model="firstName">
 
 			<div class="row">
 				<div class="col-12">

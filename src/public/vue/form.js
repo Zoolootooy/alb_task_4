@@ -495,13 +495,8 @@ var app = new Vue({
                 }
             }
             if (this.lastName.trim().length >= min && this.lastName.trim().length <= max) {
-                if (!this.checkForSpaces(this.lastName)){
-                    this.errorLastName = true
-                    this.errorLastNameText = 'Don\'t start or end "Lastname" field with space'
-                } else {
-                    this.errorLastName = false
-                    this.errorLastNameText = ''
-                }
+                this.errorLastName = false
+                this.errorLastNameText = ''
             }
             if (this.lastName.trim().length > max) {
                 this.errorLastName = true
@@ -530,13 +525,8 @@ var app = new Vue({
                 }
             }
             if (this.repSubj.trim().length >= min && this.repSubj.trim().length <= max) {
-                if (!this.checkForSpaces(this.repSubj)){
-                    this.errorRepSubj = true
-                    this.errorRepSubjText = 'Don\'t start or end "Report subject" field with space'
-                } else {
-                    this.errorRepSubj = false
-                    this.errorRepSubjText = ''
-                }
+                this.errorRepSubj = false
+                this.errorRepSubjText = ''
             }
             if (this.repSubj.trim().length > max) {
                 this.errorRepSubj = true
